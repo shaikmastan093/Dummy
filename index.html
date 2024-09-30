@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GrooveNexus - AR Technology</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+    <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v6.1.0/dist/aframe-extras.min.js"></script>
+    <script src="gesture-detector.js"></script>
+    <script src="gesture-handler.js"></script>
+    <!--<script src="script.js"></script>-->
+    <script>
+        AFRAME.registerComponent('link-out', {
+            schema: {
+                url: { type: 'string' }
+            },
+            init: function () {
+                this.el.addEventListener('click', () => {
+                    window.open(this.data.url, '_blank');
+                });
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <a-scene embedded arjs="sourceType: webcam;" vr-mode-ui="enabled: false" gesture-detector id="scene">
+        <a-assets>
+            <!-- Add your social media logo images here -->
+            <a-asset-item id="imdbLogo" src="imdb.glb"></a-asset-item>
+            <a-asset-item id="gntuneLogo" src="kv.glb"></a-asset-item>
+            <a-asset-item id="spotifyLogo" src="spotify_logo.glb"></a-asset-item>
+            <a-asset-item id="instagramLogo" src="instagram_3d-icon.glb"></a-asset-item>
+            <a-asset-item id="bowser" src="model-left-to-right.glb"></a-asset-item>
+            <img id="qrcode" src="pattern-qr_code.png">
+        </a-assets>
+
+        <a-marker preset="hiro" emitevents="true" id="markerA">
+            <!-- Adding the video above the card -->
+            <a-video src="./video/hm-intro-video.mp4" width="2.5" height="1.5" position="0 -1 -1.3" rotation="-90 0 0"></a-video>
+            
+            <!-- Adding the card -->
+            <a-plane position="0 0 0" rotation="-150 0 0" width="2.5" height="1.5" color="#000000">
+                <!-- Adding text to the card -->
+                <a-text value="DJ HIMANSHU MISHRA" align="left" color="white" position="-1.1 -0.2 0.1" scale="0.6 0.6 0.6"></a-text>
+                <a-text value="Founder - GrooveNexus" align="left" color="white" position="-1.1 -0.4 0.1" scale="0.4 0.4 0.4"></a-text>
+                <!-- Adding the QR code to the card -->
+                <a-image src="#qrcode" width="0.5" height="0.5" position="0.9 0.35 0.05" rotation="0 0 0"></a-image>
+            </a-plane>
+            
+            <!-- Adding the avatar to the right side of the card with animation-mixer -->
+            <a-entity id="avatar" gltf-model="#bowser" position="1.5 0.5 0" rotation="-90 0 0" scale="1 1 1" animation-mixer></a-entity>
+
+            <!-- Adding social media logos with click events to redirect to URLs -->
+            <a-entity gltf-model="#imdbLogo" position="1 0.97 0.53" rotation="-48 0 0" scale="4 4 4" class="clickable" link-out="url: https://www.imdb.com/name/nm14115341/"></a-entity>
+            <a-entity gltf-model="#spotifyLogo" position="0.35 0.97 0.55" rotation="0 -90 50" scale="0.2 0.2 0.2" class="clickable" link-out="url: https://open.spotify.com/artist/1UI8TqDajrGyDZA3SGjaR0"></a-entity>
+            <a-entity gltf-model="#gntuneLogo" position="-0.7 0.80 0.75" rotation="-60 0 0" scale="2.5 2.5 2.5" class="clickable" link-out="url: https://gntunes.com/djhimanshumishra"></a-entity>
+            <a-entity gltf-model="#instagramLogo" position="-1 0.97 0.55" rotation="0 -90 139" scale="0.2 0.2 0.2" class="clickable" link-out="url: https://www.instagram.com/djhimanshumishra/"></a-entity>
+        </a-marker>
+
+        <a-entity camera>
+            <a-cursor fuse="true" fuse-timeout="500"></a-cursor>
+        </a-entity>
+    </a-scene>
+</body>
+
+</html>
