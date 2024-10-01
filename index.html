@@ -1,72 +1,223 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>GrooveNexus - AR Technology</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
-    <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v6.1.0/dist/aframe-extras.min.js"></script>
-    <script src="gesture-detector.js"></script>
-    <script src="gesture-handler.js"></script>
-    <!--<script src="script.js"></script>-->
-    <script>
-        AFRAME.registerComponent('link-out', {
-            schema: {
-                url: { type: 'string' }
-            },
-            init: function () {
-                this.el.addEventListener('click', () => {
-                    window.open(this.data.url, '_blank');
-                });
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stylish AR Business Card</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://ar-js-org.github.io/AR.js/aframe/build/aframe-ar.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        a-scene {
+            width: 100%;
+            height: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .profile-name {
+                font-size: 1.5em;
             }
-        });
-    </script>
+            .social-icon {
+                scale: 0.1 0.1 0.1;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .slide-in {
+            animation: slideIn 1s forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .flip-animation {
+            animation: flip 1s forwards;
+        }
+
+        @keyframes flip {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(180deg); }
+            100% { transform: rotateY(0deg); }
+        }
+    </style>
 </head>
-
 <body>
-    <a-scene embedded arjs="sourceType: webcam;" vr-mode-ui="enabled: false" gesture-detector id="scene">
-        <a-assets>
-            <!-- Add your social media logo images here -->
-            <a-asset-item id="imdbLogo" src="imdb.glb"></a-asset-item>
-            <a-asset-item id="gntuneLogo" src="kv.glb"></a-asset-item>
-            <a-asset-item id="spotifyLogo" src="spotify_logo.glb"></a-asset-item>
-            <a-asset-item id="instagramLogo" src="instagram_3d-icon.glb"></a-asset-item>
-            <a-asset-item id="bowser" src="model-left-to-right.glb"></a-asset-item>
-            <img id="qrcode" src="pattern-qr_code.png">
-        </a-assets>
+    <a-scene embedded arjs>
+        <a-light type="ambient" color="#ffffff" intensity="0.7"></a-light>
+        <a-light type="directional" color="#ffffff" intensity="1" position="-1 1 1"></a-light>
 
-        <a-marker preset="hiro" emitevents="true" id="markerA">
-            <!-- Adding the video above the card -->
-            <a-video src="./video/hm-intro-video.mp4" width="2.5" height="1.5" position="0 -1 -1.3" rotation="-90 0 0"></a-video>
-            
-            <!-- Adding the card -->
-            <a-plane position="0 0 0" rotation="-150 0 0" width="2.5" height="1.5" color="#000000">
-                <!-- Adding text to the card -->
-                <a-text value="DJ HIMANSHU MISHRA" align="left" color="white" position="-1.1 -0.2 0.1" scale="0.6 0.6 0.6"></a-text>
-                <a-text value="Founder - GrooveNexus" align="left" color="white" position="-1.1 -0.4 0.1" scale="0.4 0.4 0.4"></a-text>
-                <!-- Adding the QR code to the card -->
-                <a-image src="#qrcode" width="0.5" height="0.5" position="0.9 0.35 0.05" rotation="0 0 0"></a-image>
-            </a-plane>
-            
-            <!-- Adding the avatar to the right side of the card with animation-mixer -->
-            <a-entity id="avatar" gltf-model="#bowser" position="1.5 0.5 0" rotation="-90 0 0" scale="1 1 1" animation-mixer></a-entity>
+        <a-marker type="pattern" url="./marker.patt" id="marker">
+            <a-video id="background-video" src="./assets/video.mp4" 
+                     position="0 1.5 0" scale="2 1 1" 
+                     autoplay="false" loop="true" visible="false"></a-video>
 
-            <!-- Adding social media logos with click events to redirect to URLs -->
-            <a-entity gltf-model="#imdbLogo" position="1 0.97 0.53" rotation="-48 0 0" scale="4 4 4" class="clickable" link-out="url: https://www.imdb.com/name/nm14115341/"></a-entity>
-            <a-entity gltf-model="#spotifyLogo" position="0.35 0.97 0.55" rotation="0 -90 50" scale="0.2 0.2 0.2" class="clickable" link-out="url: https://open.spotify.com/artist/1UI8TqDajrGyDZA3SGjaR0"></a-entity>
-            <a-entity gltf-model="#gntuneLogo" position="-0.7 0.80 0.75" rotation="-60 0 0" scale="2.5 2.5 2.5" class="clickable" link-out="url: https://gntunes.com/djhimanshumishra"></a-entity>
-            <a-entity gltf-model="#instagramLogo" position="-1 0.97 0.55" rotation="0 -90 139" scale="0.2 0.2 0.2" class="clickable" link-out="url: https://www.instagram.com/djhimanshumishra/"></a-entity>
+            <a-image id="profile-image" src="./assets/selva.png" 
+                     scale="0.5 0.5 0.5" position="1.2 0.6 0" 
+                     visible="false"></a-image>
+            
+            <a-text id="profile-name" value="SELVENDRAN S" 
+                     position="1.5 0.1 0" scale="1 1 1" 
+                     color="#FFD700" align="center" 
+                     visible="false"></a-text>
+
+            <a-image id="email-icon" src="./assets/email.png" 
+                     scale="0.15 0.15 0.15" position="1.1 -0.2 0" 
+                     visible="false"></a-image>
+            <a-text id="email-text" value="selvendran.s@infrazanalytics.com" 
+                     position="1.3 -0.2 0" scale="0.7 0.7 0" 
+                     color="#FFFFFF" visible="false"></a-text>
+
+            <a-image id="contact-icon" src="./assets/phone.png" 
+                     scale="0.15 0.15 0.15" position="1.1 -0.5 0" 
+                     visible="false"></a-image>
+            <a-text id="contact-text" value="+91950079783" 
+                     position="1.3 -0.5 0" scale="0.7 0.7 0" 
+                     color="#FFFFFF" visible="false"></a-text>
+
+            <a-image id="website-icon" src="./assets/internet.png" 
+                     scale="0.15 0.15 0.15" position="1.1 -0.8 0" 
+                     visible="false"></a-image>
+            <a-text id="website-text" value="www.infrazanalytics.com" 
+                     position="1.3 -0.8 0" scale="0.7 0.7 0" 
+                     color="#FFFFFF" visible="false"></a-text>
+
+            <a-entity id="animated-model" gltf-model="./assets/model3.glb" 
+                      scale="0.4 0.4 0.4" position="-1 0 0" 
+                      visible="false"></a-entity>
+
+            <a-image id="facebook-icon" src="./assets/facebook.png" 
+                     scale="0.2 0.2 0.2" position="-0.5 -0.5 -0.5" 
+                     visible="false" class="social-icon"
+                     onclick="console.log('Facebook icon clicked');"
+                     onmouseenter="this.setAttribute('scale', '0.25 0.25 0.25');"  
+                     onmouseleave="this.setAttribute('scale', '0.2 0.2 0.2');"></a-image>
+
+            <a-image id="linkedin-icon" src="./assets/linkedin.png" 
+                     scale="0.2 0.2 0.2" position="-0.2 -0.5 -0.5" 
+                     visible="false" class="social-icon"
+                     onclick="window.open('https://www.linkedin.com/in/yourprofile', '_blank');"></a-image>
+            
+            <a-image id="instagram-icon" src="./assets/instagram.png" 
+                     scale="0.2 0.2 0.2" position="0.1 -0.5 -0.5" 
+                     visible="false" class="social-icon"
+                     onclick="window.open('https://www.instagram.com/yourprofile', '_blank');"></a-image>
         </a-marker>
 
-        <a-entity camera>
-            <a-cursor fuse="true" fuse-timeout="500"></a-cursor>
-        </a-entity>
+        <a-entity camera></a-entity>
     </a-scene>
-</body>
 
+    <script>
+        document.querySelector('#marker').addEventListener('markerFound', () => {
+            const elementsToShow = [
+                'background-video', 
+                'profile-image', 
+                'profile-name', 
+                'email-icon', 
+                'email-text', 
+                'contact-icon', 
+                'contact-text', 
+                'website-icon', 
+                'website-text', 
+                'animated-model', 
+                'facebook-icon', 
+                'linkedin-icon', 
+                'instagram-icon'
+            ];
+
+            const toggleVisibility = (elementId, visibility) => {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.setAttribute('visible', visibility);
+                }
+            };
+
+            // Step 1: Show Video
+            toggleVisibility('background-video', 'true');
+            document.getElementById('background-video').setAttribute('autoplay', 'true');
+
+            // Step 2: Show Profile Image and Name with animations
+            setTimeout(() => {
+                toggleVisibility('profile-image', 'true');
+                toggleVisibility('profile-name', 'true');
+                document.getElementById('profile-image').setAttribute('class', 'flip-animation');
+                document.getElementById('profile-name').setAttribute('class', 'slide-in');
+            }, 1000); // 1 second delay
+
+            // Step 3: Show Email, Contact, and Website info
+            setTimeout(() => {
+                toggleVisibility('email-icon', 'true');
+                toggleVisibility('email-text', 'true');
+                toggleVisibility('contact-icon', 'true');
+                toggleVisibility('contact-text', 'true');
+                toggleVisibility('website-icon', 'true');
+                toggleVisibility('website-text', 'true');
+            }, 2000); // 2 seconds delay
+
+            // Step 4: Show the Animated Model
+            setTimeout(() => {
+                toggleVisibility('animated-model', 'true');
+            }, 3000); // 3 seconds delay
+
+            // Step 5: Show Social Media Icons
+            setTimeout(() => {
+                toggleVisibility('facebook-icon', 'true');
+                toggleVisibility('linkedin-icon', 'true');
+                toggleVisibility('instagram-icon', 'true');
+            }, 4000); // 4 seconds delay
+        });
+
+        document.querySelector('#marker').addEventListener('markerLost', () => {
+            const elementsToHide = [
+                'background-video', 
+                'profile-image', 
+                'profile-name', 
+                'email-icon', 
+                'email-text', 
+                'contact-icon', 
+                'contact-text', 
+                'website-icon', 
+                'website-text', 
+                'animated-model', 
+                'facebook-icon', 
+                'linkedin-icon', 
+                'instagram-icon'
+            ];
+
+            const toggleVisibility = (elementId, visibility) => {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.setAttribute('visible', visibility);
+                }
+            };
+
+            elementsToHide.forEach(id => toggleVisibility(id, 'false'));
+        });
+    </script>
+    
+</body>
 </html>
